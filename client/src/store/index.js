@@ -204,6 +204,43 @@ export const useGlobalStore = () => {
         });
     }
 
+    store.createNewList = function (untitled) {
+        async function asyncCreateNewList() {
+            let response = await api.createPlaylist(untitled);
+            if(response.data.success){
+                let playist = response.data.playlist;
+                let pair = store.idNamePairs;
+                pair.push(playist);
+                storeReducer({
+                    type : GlobalStoreActionType.CREATE_NEW_LIST,
+                    payload : {idNamePairs : pair, playist : playist},
+                })
+            }
+        }
+        asyncCreateNewList();
+    }
+
+    store.deletePlaylist = function (id){
+        async function asyncDeletePlaylist(){
+            console.log(await api.getPlaylistById(id));            
+            let response = await api.deletePlaylist(id);
+            let pairs = store.idNamePairs;
+            if(response.data.success){
+                let playist = response.data.playlist;
+                let pair = store.idNamePairs;
+                pair.push(playist);
+                storeReducer({
+                    type : GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+                    payload : {idNamePairs : pair, playist : playist},
+                })
+            }
+        }
+        asyncDeletePlaylist()
+    }
+
+
+
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT
     return { store, storeReducer };
+
 }

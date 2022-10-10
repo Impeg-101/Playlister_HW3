@@ -11,6 +11,7 @@ import { GlobalStoreContext } from '../store'
 function ListCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [ editActive, setEditActive ] = useState(false);
+    const [ deleteActive, setDeleteActive ] = useState(false);
     const [ text, setText ] = useState("");
     store.history = useHistory();
     const { idNamePair, selected } = props;
@@ -37,6 +38,21 @@ function ListCard(props) {
             store.setIsListNameEditActive();
         }
         setEditActive(newActive);
+    }
+
+    function handleToggleDelete(event){
+        event.stopPropagation();
+        // toggleDelete(idNamePair._id);
+        store.deletePlaylist(idNamePair._id);
+    }
+
+    function toggleDelete(id){
+        let newActive = !deleteActive;
+        if(newActive){
+            store.deletePlaylist(id);
+            // store.setListDeleteActive();
+        }
+        setDeleteActive(newActive);
     }
 
     function handleKeyPress(event) {
@@ -75,6 +91,7 @@ function ListCard(props) {
                 type="button"
                 id={"delete-list-" + idNamePair._id}
                 className="list-card-button"
+                onClick={handleToggleDelete}
                 value={"\u2715"}
             />
             <input
@@ -94,9 +111,19 @@ function ListCard(props) {
                 className='list-card'
                 type='text'
                 onKeyPress={handleKeyPress}
-                onChange={handleUpdateText}
-                defaultValue={idNamePair.name}
             />;
+    }
+
+    if(deleteActive){
+        cardElement =
+        <input
+            id = {"list-" + idNamePair.id}
+            className='list-card'
+            type='text'
+            onKeyPress={handleKeyPress}
+            onChange={handleUpdateText}
+            defaultValue={idNamePair.name}
+            />
     }
     return (
         cardElement
