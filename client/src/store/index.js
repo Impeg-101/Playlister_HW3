@@ -209,11 +209,11 @@ export const useGlobalStore = () => {
             let response = await api.createPlaylist(untitled);
             if(response.data.success){
                 let playist = response.data.playlist;
-                let pair = store.idNamePairs;
-                pair.push(playist);
+                let pairs = store.idNamePairs;
+                pairs.push(playist);
                 storeReducer({
                     type : GlobalStoreActionType.CREATE_NEW_LIST,
-                    payload : {idNamePairs : pair, playist : playist},
+                    payload : {idNamePairs : pairs, playist : playist},
                 })
             }
         }
@@ -221,17 +221,22 @@ export const useGlobalStore = () => {
     }
 
     store.deletePlaylist = function (id){
-        async function asyncDeletePlaylist(){
-            console.log(await api.getPlaylistById(id));            
+        async function asyncDeletePlaylist(){          
             let response = await api.deletePlaylist(id);
-            let pairs = store.idNamePairs;
             if(response.data.success){
-                let playist = response.data.playlist;
-                let pair = store.idNamePairs;
-                pair.push(playist);
+                let playlist = response.data.playlist;
+                let pairs = store.idNamePairs;
+                let newPairs = [];
+                for(let i = 0; i < pairs.length; i++){
+                    if(pairs[i]._id !== playlist._id){
+                        newPairs.push(pairs[i]);
+                    }
+                }
+                store.idNamePairs = newPairs;
+                console.log(store.idNamePairs);
                 storeReducer({
                     type : GlobalStoreActionType.MARK_LIST_FOR_DELETION,
-                    payload : {idNamePairs : pair, playist : playist},
+                    payload : {idNamePairs : newPairs, playist : playlist},
                 })
             }
         }
