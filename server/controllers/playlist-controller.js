@@ -100,11 +100,11 @@ deletePlaylist = async(req, res) => {
 }
 
 editPlaylist = async(req, res) => {
-    await Playlist.findByIdAndUpdate({ _id: req.params.id }, {name : req.name}, (err, list) => {
+    await Playlist.findByIdAndUpdate({ _id: req.params.id }, req.body, (err, list) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-
+        list.name = req.body.name;
         return res.status(200).json({ success: true, playlist: list })
     }).catch(err => console.log(err))
 }
