@@ -42,14 +42,13 @@ function ListCard(props) {
 
     function handleToggleDelete(event){
         event.stopPropagation();
-        // toggleDelete(idNamePair._id);
-        store.deletePlaylist(idNamePair._id);
+        toggleDelete(idNamePair._id);
     }
 
     function toggleDelete(id){
         let newActive = !deleteActive;
         if(newActive){
-            store.deletePlaylist(id);
+            // store.deletePlaylist(id);
             // store.setListDeleteActive();
         }
         setDeleteActive(newActive);
@@ -115,15 +114,7 @@ function ListCard(props) {
     }
 
     if(deleteActive){
-        cardElement =
-        <input
-            id = {"list-" + idNamePair.id}
-            className='list-card'
-            type='text'
-            onKeyPress={handleKeyPress}
-            onChange={handleUpdateText}
-            defaultValue={idNamePair.name}
-            />
+        
     }
     return (
         cardElement

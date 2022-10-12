@@ -18,6 +18,7 @@ export const GlobalStoreActionType = {
     LOAD_ID_NAME_PAIRS: "LOAD_ID_NAME_PAIRS",
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
+    MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -228,12 +229,14 @@ export const useGlobalStore = () => {
                 let pairs = store.idNamePairs;
                 let newPairs = [];
                 for(let i = 0; i < pairs.length; i++){
-                    if(pairs[i]._id !== playlist._id){
+                    console.log(pairs[i]._id);
+                    console.log(playlist._id);
+                    console.log();
+                    if(pairs[i]._id !== playlist.id){
                         newPairs.push(pairs[i]);
                     }
                 }
                 store.idNamePairs = newPairs;
-                console.log(store.idNamePairs);
                 storeReducer({
                     type : GlobalStoreActionType.MARK_LIST_FOR_DELETION,
                     payload : {idNamePairs : newPairs, playist : playlist},
@@ -242,6 +245,8 @@ export const useGlobalStore = () => {
         }
         asyncDeletePlaylist()
     }
+
+
 
 
 
