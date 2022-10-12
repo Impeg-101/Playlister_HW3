@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { GlobalStoreContext } from '../store'
+import DeleteListModal from './DeleteListModal';
 /*
     This is a card in our list of playlists. It lets select
     a list for editing and it has controls for changing its 
@@ -42,14 +43,13 @@ function ListCard(props) {
 
     function handleToggleDelete(event){
         event.stopPropagation();
-        toggleDelete(idNamePair._id);
+        store.markListForDeletion(idNamePair);
     }
 
     function toggleDelete(id){
         let newActive = !deleteActive;
         if(newActive){
-            // store.deletePlaylist(id);
-            // store.setListDeleteActive();
+            store.markListForDeletion(id);
         }
         setDeleteActive(newActive);
     }

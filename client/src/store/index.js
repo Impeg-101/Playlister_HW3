@@ -81,6 +81,7 @@ export const useGlobalStore = () => {
                 return setStore({
                     idNamePairs: store.idNamePairs,
                     currentList: null,
+                    PlaylistToDelete : payload.PlaylistToDelete,
                     newListCounter: store.newListCounter,
                     listNameActive: false
                 });
@@ -204,10 +205,17 @@ export const useGlobalStore = () => {
             payload: null
         });
     }
+    //create and then open the last one to edit
+    store.createPlaylistT = function () {
+        store.createNewList();
+        if(this.store.currentList !== null){
+            store.setCurrentList(this.store.idNamePairs[this.store.idNamePairs.length-1]);
+        }
+    }
 
-    store.createNewList = function (untitled) {
+    store.createNewList = function () {
         async function asyncCreateNewList() {
-            let response = await api.createPlaylist(untitled);
+            let response = await api.createPlaylist({name : "Untitled", song : []});
             if(response.data.success){
                 let playist = response.data.playlist;
                 let pairs = store.idNamePairs;
@@ -219,6 +227,16 @@ export const useGlobalStore = () => {
             }
         }
         asyncCreateNewList();
+    }
+
+    store.markListForDeletion = function (pair){
+        storeReducer({
+            type : GlobalStoreActionType.MARK_LIST_FOR_DELETION,
+            payload : {
+                PlaylistToDelete : pair
+            }
+        })
+        store.showDeleteModal();
     }
 
     store.deletePlaylist = function (id){
@@ -243,7 +261,16 @@ export const useGlobalStore = () => {
                 })
             }
         }
-        asyncDeletePlaylist()
+        asyncDeletePlaylist();
+    }
+
+    store.hideDeleteModal = function (){
+        let modal = document.getElementById("delete-list-modal");
+        modal.classList.remove("is-visible");
+    }
+    store.showDeleteModal = function (){
+        let modal = document.getElementById("delete-list-modal");
+        modal.classList.add("is-visible");
     }
 
 

@@ -1,18 +1,18 @@
 import { useContext } from 'react'
 import { GlobalStoreContext } from '../store'
 
-function DeleteListModal(props){
-    const {store, storeReducer} = useContext(GlobalStoreContext);
+function EditListModal(){
+    const {store} = useContext(GlobalStoreContext);
 
-    let name = (store.PlaylistToDelete === undefined || store.PlaylistToDelete === null) ? "" : store.PlaylistToDelete.name;
+    let name = (store.PlaylistToEdit === undefined || store.PlaylistToEdit === null) ? "" : store.PlaylistToEdit.name;
 
-    function handleConfirmDelete(){
-        store.deletePlaylist(store.PlaylistToDelete._id);
-        store.hideDeleteModal();
+    function handleConfirmEdit(){
+        store.deletePlaylist(store.PlaylistToEdit._id);
+        store.hideEditModal();
     }
 
-    function handleCancelDelete(){
-        store.hideDeleteModal();
+    function handleCancelEdit(){
+        store.hideEditModal();
     }
     
     return (
@@ -24,7 +24,7 @@ function DeleteListModal(props){
                 className="modal-root" 
                 id='verify-delete-list-root'>
                 <div className="modal-north">
-                Delete the {name} playlist?
+                Edit the {name} playlist?
                 </div>
                 <div className="modal-center">
                     <div className="modal-center-content">
@@ -36,14 +36,14 @@ function DeleteListModal(props){
                         type="button" 
                         id="remove-song-confirm-button" 
                         className="modal-button" 
-                        onClick={handleConfirmDelete} 
+                        onClick={handleConfirmEdit} 
                         value='Confirm' 
                     />
                     <input 
                         type="button" 
                         id="remove-song-cancel-button" 
                         className="modal-button" 
-                        onClick={handleCancelDelete} 
+                        onClick={handleCancelEdit} 
                         value='Cancel' 
                     />
                 </div>
@@ -52,4 +52,4 @@ function DeleteListModal(props){
     )
 } 
 
-export default DeleteListModal;
+export default EditListModal;

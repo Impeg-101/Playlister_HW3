@@ -16,7 +16,7 @@ const ListSelector = () => {
     }, []);
 
     function handleCreateNewList() {
-        store.createNewList({name : "Untitled", song : []});
+        store.createNewList();
     }
     let listCard = "";
     if (store) {
