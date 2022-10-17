@@ -1,6 +1,11 @@
 import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
+// OUR TRANSACTIONS
+import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
+import AddSong_Transaction from './transactions/AddSong_Transaction.js';
+import DeleteSong_Transaction from './transactions/DeleteSong_Transaction.js';
+import EditSong_Transaction from './transactions/EditSong_Transaction.js';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -114,10 +119,6 @@ export const useGlobalStore = () => {
                 });
             }
             case GlobalStoreActionType.ADD_SONG: {
-
-                console.log(payload.idNamePairs);
-                console.log(payload.playlist);
-                console.log();
                 return setStore({
                     idNamePairs: payload.idNamePairs,
                     currentList: payload.playlist,
@@ -285,7 +286,6 @@ export const useGlobalStore = () => {
                 }else{
                     playlist.songs.splice(index, 0, newSong);
                 }
-                console.log(playlist);
                 async function updateList() {
                     response = await api.createSong(id, playlist.songs);
                     if (response.data.success) {
@@ -293,7 +293,6 @@ export const useGlobalStore = () => {
                             response = await api.getPlaylistPairs();
                             if (response.data.success) {
                                 let pairsArray = response.data.idNamePairs;
-                                console.log(playlist);
                                 storeReducer({
                                     type: GlobalStoreActionType.ADD_SONG,
                                     payload: {
@@ -323,7 +322,7 @@ export const useGlobalStore = () => {
             }
         })
         store.showModal("delete-song-modal"); 
-       }
+    }
 
 
 
@@ -335,7 +334,10 @@ export const useGlobalStore = () => {
 
 
 
-
+    //transactions
+    store.addAddSongTransaction = function(id, newSong){
+        tps.addTransaction(new AddSong_Transaction(store, id, newSong));
+    }
 
     //control modal to display/undisplay
     store.hideModal = function (id){
