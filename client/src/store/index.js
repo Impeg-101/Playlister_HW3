@@ -2,10 +2,10 @@ import { createContext, useState } from 'react'
 import jsTPS from '../common/jsTPS'
 import api from '../api'
 // OUR TRANSACTIONS
-import MoveSong_Transaction from './transactions/MoveSong_Transaction.js';
-import AddSong_Transaction from './transactions/AddSong_Transaction.js';
-import DeleteSong_Transaction from './transactions/DeleteSong_Transaction.js';
-import EditSong_Transaction from './transactions/EditSong_Transaction.js';
+import MoveSong_Transaction from '../transactions/MoveSong_Transaction.js';
+import AddSong_Transaction from '../transactions/AddSong_Transaction.js';
+import DeleteSong_Transaction from '../transactions/DeleteSong_Transaction.js';
+import EditSong_Transaction from '../transactions/EditSong_Transaction.js';
 export const GlobalStoreContext = createContext({});
 /*
     This is our global data store. Note that it uses the Flux design pattern,
@@ -25,6 +25,7 @@ export const GlobalStoreActionType = {
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
     ADD_SONG: "ADD_SONG",
+    MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -126,6 +127,32 @@ export const useGlobalStore = () => {
                     listNameActive: false,
                 })
             }
+            case GlobalStoreActionType.MARK_SONG_FOR_DELETION: {
+                return setStore({
+                    idNamePairs: payload.idNamePairs,
+                    currentList: payload.playlist,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                })
+            }
+            // case GlobalStoreActionType.MARK_SONG_FOR_DELETION: {
+            //     return setStore({
+            //         idNamePairs: payload.idNamePairs,
+            //         currentList: payload.playlist,
+            //         newListCounter: store.newListCounter,
+            //         listNameActive: false,
+            //     })
+            // }
+            // case GlobalStoreActionType.MARK_SONG_FOR_DELETION: {
+            //     return setStore({
+            //         idNamePairs: payload.idNamePairs,
+            //         currentList: payload.playlist,
+            //         newListCounter: store.newListCounter,
+            //         listNameActive: false,
+            //     })
+            // }
+
+
             default:
                 return store;
         }
@@ -311,9 +338,6 @@ export const useGlobalStore = () => {
         asyncAddSong();
     }
 
-
-
-
     store.markSongForDeletion = function (song){
         storeReducer({
             type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
@@ -324,6 +348,9 @@ export const useGlobalStore = () => {
         store.showModal("delete-song-modal"); 
     }
 
+    store.deleteSong = function (playlistID, songID) {
+            
+    }
 
 
 
@@ -337,6 +364,18 @@ export const useGlobalStore = () => {
     //transactions
     store.addAddSongTransaction = function(id, newSong){
         tps.addTransaction(new AddSong_Transaction(store, id, newSong));
+    }
+
+    store.addDeleteSongTransaction = function(){
+        tps.addTransaction(new DeleteSong_Transaction(store));
+    }
+
+    store.addEditSongTransaction = function(){
+        tps.addTransaction(new EditSong_Transaction(store));
+    }
+
+    store.addMoveSongTransaction = function(from, to, id){
+        tps.addTransaction(new MoveSong_Transaction(store, from, to, id));
     }
 
     //control modal to display/undisplay
