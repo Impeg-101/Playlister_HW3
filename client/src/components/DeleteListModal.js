@@ -8,11 +8,11 @@ function DeleteListModal(props){
 
     function handleConfirmDelete(){
         store.deletePlaylist(store.PlaylistToDelete._id);
-        store.hideDeleteModal();
+        store.hideModal("delete-list-modal");
     }
 
     function handleCancelDelete(){
-        store.hideDeleteModal();
+        store.hideModal("delete-list-modal");
     }
     
     return (

@@ -1,13 +1,13 @@
 import { useContext } from 'react'
 import { GlobalStoreContext } from '../store'
 
-function EditListModal(){
+function EditSongModal(){
     const {store} = useContext(GlobalStoreContext);
 
-    let name = (store.PlaylistToEdit === undefined || store.PlaylistToEdit === null) ? "" : store.PlaylistToEdit.name;
+    let name = (store.SongToEdit === undefined || store.SongToEdit === null) ? "" : store.SongToEdit.name;
 
     function handleConfirmEdit(){
-        store.deletePlaylist(store.PlaylistToEdit._id);
+        store.deleteSong(store.SongToEdit._id);
         store.hideEditModal();
     }
 
@@ -17,18 +17,18 @@ function EditListModal(){
     
     return (
         <div
-            id="delete-list-modal"
+            id="delete-song-modal"
             className={"modal"}
             data-animation="slideInOutLeft">
             <div 
                 className="modal-root" 
-                id='verify-delete-list-root'>
+                id='verify-delete-song-root'>
                 <div className="modal-north">
-                Edit the {name} playlist?
+                Edit the {name} playsong?
                 </div>
                 <div className="modal-center">
                     <div className="modal-center-content">
-                        Are you sure you wish to permanently delete the {name} playlist?
+                        Are you sure you wish to permanently delete the {name} playsong?
                     </div>
                 </div>
                 <div className="modal-south">
@@ -52,4 +52,4 @@ function EditListModal(){
     )
 } 
 
-export default EditListModal;
+export default EditSongModal;

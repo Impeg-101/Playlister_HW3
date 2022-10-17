@@ -89,11 +89,10 @@ getPlaylistPairs = async (req, res) => {
 }
 
 deletePlaylist = async(req, res) => {
-    await Playlist.deleteOne({ _id: req.params.id }, (err, list) => {
+    await Playlist.findOneAndDelete({ _id: req.params.id }, (err, list) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        list.id = req.params.id;
         return res.status(200).json({ success: true, playlist: list })
     }).catch(err => console.log(err))
 
@@ -106,6 +105,41 @@ updatePlaylistById = async(req, res) => {
         }
         list.name = req.body.name;
         return res.status(200).json({ success: true, playlist: list })
+    }).catch(err => console.log(err))
+}
+
+createSong = async (req, res) => {
+    await Playlist.findOne({ _id: req.params.id },(err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
+
+        const song = req.body;
+
+        if (!song) {
+            return res.status(400).json({
+                success: false,
+                error: 'You must provide a Song',
+            })
+        }
+
+        list.songs.push(song);
+
+        list
+            .save()
+            .then(() => {
+                return res.status(201).json({
+                    success: true,
+                    playlist: list,
+                    message: 'Playlist Created!',
+                })
+            })
+            .catch(error => {
+                return res.status(400).json({
+                    error,
+                    message: 'Playlist Not Created!',
+                })
+            })
     }).catch(err => console.log(err))
 }
 
@@ -122,7 +156,7 @@ module.exports = {
     // getSongs,
     // getSongPairs,
     // getSongById,
-    // createSong,
+    createSong,
     // deleteSong,
     // editSong,
 }

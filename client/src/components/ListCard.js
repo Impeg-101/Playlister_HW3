@@ -46,14 +46,6 @@ function ListCard(props) {
         store.markListForDeletion(idNamePair);
     }
 
-    function toggleDelete(id){
-        let newActive = !deleteActive;
-        if(newActive){
-            store.markListForDeletion(id);
-        }
-        setDeleteActive(newActive);
-    }
-
     function handleKeyPress(event) {
         if (event.code === "Enter") {
             let id = event.target.id.substring("list-".length);
@@ -63,6 +55,7 @@ function ListCard(props) {
     }
     function handleUpdateText(event) {
         setText(event.target.value );
+        console.log(text);
     }
 
     let selectClass = "unselected-list-card";
@@ -110,6 +103,8 @@ function ListCard(props) {
                 className='list-card'
                 type='text'
                 onKeyPress={handleKeyPress}
+                onChange = {handleUpdateText}
+                defaultValue = {idNamePair.name}
             />;
     }
 
