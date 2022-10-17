@@ -19,6 +19,7 @@ export const GlobalStoreActionType = {
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
+    ADD_SONG: "ADD_SONG",
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -111,6 +112,18 @@ export const useGlobalStore = () => {
                     newListCounter: store.newListCounter,
                     listNameActive: true
                 });
+            }
+            case GlobalStoreActionType.ADD_SONG: {
+
+                console.log(payload.idNamePairs);
+                console.log(payload.playlist);
+                console.log();
+                return setStore({
+                    idNamePairs: payload.idNamePairs,
+                    currentList: payload.playlist,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                })
             }
             default:
                 return store;
@@ -261,7 +274,56 @@ export const useGlobalStore = () => {
         asyncDeletePlaylist();
     }
 
+    store.addSong = function (id, newSong, index) {
+        // GET THE LIST
+        async function asyncAddSong() {
+            let response = await api.getPlaylistById(id);
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+                if(index === playlist.songs.length){
+                    playlist.songs.push(newSong);
+                }else{
+                    playlist.songs.splice(index, 0, newSong);
+                }
+                console.log(playlist);
+                async function updateList() {
+                    response = await api.createSong(id, playlist.songs);
+                    if (response.data.success) {
+                        async function getListPairs() {
+                            response = await api.getPlaylistPairs();
+                            if (response.data.success) {
+                                let pairsArray = response.data.idNamePairs;
+                                console.log(playlist);
+                                storeReducer({
+                                    type: GlobalStoreActionType.ADD_SONG,
+                                    payload: {
+                                        idNamePairs: pairsArray,
+                                        playlist: playlist
+                                    }
+                                });
+                            }
+                        }
+                        getListPairs();
+                    }
+                }
+                updateList();
+            }
+        }
+        asyncAddSong();
+    }
 
+
+
+
+    store.markSongForDeletion = function (song){
+        storeReducer({
+            type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
+            payload: {
+                SongToDelete : song
+            }
+        })
+        store.showModal("delete-song-modal"); 
+       }
 
 
 

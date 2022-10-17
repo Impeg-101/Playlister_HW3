@@ -97,13 +97,12 @@ deletePlaylist = async(req, res) => {
     }).catch(err => console.log(err))
 
 }
-
+// parameter is new playlist and change to new playlist instad of updating
 updatePlaylistById = async(req, res) => {
     await Playlist.findByIdAndUpdate({ _id: req.params.id }, req.body, (err, list) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        list.name = req.body.name;
         return res.status(200).json({ success: true, playlist: list })
     }).catch(err => console.log(err))
 }

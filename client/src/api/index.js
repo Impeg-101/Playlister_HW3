@@ -23,14 +23,14 @@ const api = axios.create({
 // CUSTOM FILTERS FOR QUERIES
 export const getAllPlaylists = () => api.get(`/playlists`)
 export const getPlaylistPairs = () => api.get('playlistpairs')
-export const getPlaylistById = (playlistID) => api.get(`/playlist/${playlistID}`)
+export const getPlaylistById = (id) => api.get(`/playlist/${id}`)
 
 export const createPlaylist = (newPlaylist) => api.post('/playlist', newPlaylist)
-export const deletePlaylist = (playlistID) => api.delete(`/playlist/${playlistID}`)
-export const updatePlaylistById = (playlistID, changeListName) => api.put(`/playlist/${playlistID}`, changeListName)
+export const deletePlaylist = (id) => api.delete(`/playlist/${id}`)
+export const updatePlaylistById = (id, changeListName) => api.put(`/playlist/${id}`, {name : changeListName})
 
-export const createSong = (playlistID, newSong) => api.post(`/playlist/${playlistID}`, newSong)
-export const deleteSong = (playlistID, songID) => api.post(`/playlist/${playlistID}/${songID}`)
+export const createSong = (id, newSongs) => api.put(`/playlist/${id}`, {songs : newSongs})
+export const deleteSong = (id, newSongs) => api.put(`/playlist/${id}`, {songs : newSongs})
 export const editSong = (songID) => api.put()
 
 const apis = {
