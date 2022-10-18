@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import { __RouterContext } from 'react-router';
 import { GlobalStoreContext } from '../store'
 
 function SongCard(props) {
@@ -6,11 +7,23 @@ function SongCard(props) {
 
     const { song, index } = props;
     let cardClass = "list-card unselected-list-card";
+
+
+    function handleRemoveSong(event){
+        event.stopPropagation();
+        store.markSongForDeletion(store.currentList._id ,song,index);
+    }
+
+
+
+
+
     return (
         <div
             key={index}
             id={'song-' + index + '-card'}
             className={cardClass}
+            draggable = "true"
         >
             {index + 1}.
             <a
@@ -24,6 +37,7 @@ function SongCard(props) {
                 id={"remove-song-" + index}
                 className="list-card-button"
                 value={"\u2715"}
+                onClick={handleRemoveSong}
             />
         </div>
     );
