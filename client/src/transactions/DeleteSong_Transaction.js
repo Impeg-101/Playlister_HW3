@@ -12,9 +12,12 @@ import jsTPS_Transaction from "../common/jsTPS.js"
     constructor(store) {
         super();
         this.store = store;
-        this.id = this.store.idNamePairs_toDelete._id;
+        this.id = this.store.currentList._id;
         this.index = this.store.song_toDelete_index;
-        this.savedsong = {title : this.store.song_toDelete.title, artist: this.store.song_toDelete.artist, youTubeId: this.store.song_toDelete.youTubeId};
+        this.savedsong = {
+            title : this.store.SongToDelete.title, 
+            artist: this.store.SongToDelete.artist, 
+            youTubeId: this.store.SongToDelete.youTubeId};
     }
 
     doTransaction() {

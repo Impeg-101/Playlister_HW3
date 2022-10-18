@@ -4,51 +4,50 @@ import { GlobalStoreContext } from '../store'
 function EditSongModal(){
     const {store} = useContext(GlobalStoreContext);
 
-    let name = (store.SongToEdit === undefined || store.SongToEdit === null) ? "" : store.SongToEdit.name;
-
     function handleConfirmEdit(){
-        store.deleteSong(store.SongToEdit._id);
-        store.hideEditModal();
+
+
+        store.addEditSongTransaction();
+        store.hideModal("edit-song-modal");
     }
 
     function handleCancelEdit(){
-        store.hideEditModal();
+        store.hideModal("edit-song-modal");
     }
     
-    return (null
-        // <div
-        //     id="delete-song-modal"
-        //     className={"modal"}
-        //     data-animation="slideInOutLeft">
-        //     <div 
-        //         className="modal-root" 
-        //         id='verify-delete-song-root'>
-        //         <div className="modal-north">
-        //         Edit the {name} playsong?
-        //         </div>
-        //         <div className="modal-center">
-        //             <div className="modal-center-content">
-        //                 Are you sure you wish to permanently delete the {name} playsong?
-        //             </div>
-        //         </div>
-        //         <div className="modal-south">
-        //             <input 
-        //                 type="button" 
-        //                 id="remove-song-confirm-button" 
-        //                 className="modal-button" 
-        //                 onClick={handleConfirmEdit} 
-        //                 value='Confirm' 
-        //             />
-        //             <input 
-        //                 type="button" 
-        //                 id="remove-song-cancel-button" 
-        //                 className="modal-button" 
-        //                 onClick={handleCancelEdit} 
-        //                 value='Cancel' 
-        //             />
-        //         </div>
-        //     </div>
-        // </div>
+    return (
+        <div 
+        id="edit-song-modal" 
+        className={"modal"} 
+        data-animation="slideInOutLeft">
+            <div className="modal-root" id='verify-edit-song-root' style={{width : "800px"}}>
+                <div className="modal-north">
+                    Edit Song
+                </div>
+                <div className="modal-center">
+                    <div className="modal-center-content">
+                        Title:
+                        <input className="inputs" type="text" id="titleinput" size="30" style={{fontSize:"x-large"}} ></input><br></br>
+                        Artist: 
+                        <input className="inputs" type="text" id="artistinput" size="30" style={{fontSize:"x-large"}} ></input><br></br>
+                        Youtube Id: 
+                        <input className="inputs" type="text" id="youtubeidinput" size="30" style={{fontSize:"x-large"}} ></input><br></br>
+                    </div>
+                </div>
+                <div className="modal-south">
+                    <input type="button" 
+                        id="edit-song-confirm-button" 
+                        className="modal-button" 
+                        onClick={handleConfirmEdit}
+                        value='Confirm' />
+                    <input type="button" 
+                        id="edit-song-cancel-button" 
+                        className="modal-button" 
+                        onClick={handleCancelEdit}
+                        value='Cancel' />
+                </div>
+            </div>
+    </div>
     )
 } 
 

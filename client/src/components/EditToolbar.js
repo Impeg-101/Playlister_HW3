@@ -26,16 +26,15 @@ function EditToolbar() {
 
     function handleAddSong(event){
         event.stopPropagation();
-        store.addSong(
-            store.currentList._id, 
-            {title : "Untitled", artist : "Unknown", youTubeId: "dQw4w9WgXcQ"}, 
-            store.currentList.songs.length);
+        store.addEditSongTransaction();
     }
 
     let editStatus = false;
-    if (store.isListNameEditActive) {
+    if (store.isListNameEditActive ||
+        store.currentList === null) {
         editStatus = true;
     }
+
     return (
         <span id="edit-toolbar">
             <input

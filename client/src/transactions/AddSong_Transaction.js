@@ -12,8 +12,11 @@ import jsTPS_Transaction from "../common/jsTPS.js"
     constructor(store, id, newsong) {
         super();
         this.store = store;
-        this.id = id;
-        this.newsong = newsong;
+        this.id = store.currentList._id;
+        this.newsong = {
+            title : "Untitled", 
+            artist : "Unknown", 
+            youTubeId: "dQw4w9WgXcQ"};
     }
 
     doTransaction() {

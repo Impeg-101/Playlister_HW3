@@ -24,9 +24,11 @@ export const GlobalStoreActionType = {
     SET_CURRENT_LIST: "SET_CURRENT_LIST",
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     MARK_LIST_FOR_DELETION: "MARK_LIST_FOR_DELETION",
+    DELETE_PLAYLIST : "DELETE_PLAYLIST",
     ADD_SONG: "ADD_SONG",
     MARK_SONG_FOR_DELETION: "MARK_SONG_FOR_DELETION",
     DELETE_SONG : "DELETE_SONG",
+    MOVE_SONG: "MOVE_SONG"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -40,7 +42,12 @@ export const useGlobalStore = () => {
         idNamePairs: [],
         currentList: null,
         newListCounter: 0,
-        listNameActive: false
+        listNameActive: false,
+        SongToEdit : null,
+        SongToDelete : null,
+        PlaylistToDelete : null, 
+
+
     });
 
     // HERE'S THE DATA STORE'S REDUCER, IT MUST
@@ -143,16 +150,35 @@ export const useGlobalStore = () => {
                     currentList: payload.playlist,
                     newListCounter: store.newListCounter,
                     listNameActive: false,
+                    SongToDelete : null
                 })
             }
-            // case GlobalStoreActionType.MARK_SONG_FOR_DELETION: {
-            //     return setStore({
-            //         idNamePairs: payload.idNamePairs,
-            //         currentList: payload.playlist,
-            //         newListCounter: store.newListCounter,
-            //         listNameActive: false,
-            //     })
-            // }
+            case GlobalStoreActionType.MARK_SONG_FOR_EDIT: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    SongToEdit : payload.SongToEdit
+                })
+            }
+            case GlobalStoreActionType.EDIT_SONG: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload.playlist,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    SongToEdit : null
+                })
+            }
+            case GlobalStoreActionType.MOVE_SONG: {
+                return setStore({
+                    idNamePairs: store.idNamePairs,
+                    currentList: payload.playlist,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                })
+            }
 
 
             default:
@@ -202,6 +228,7 @@ export const useGlobalStore = () => {
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
+        store.clearTransaction();
     }
 
     // THIS FUNCTION LOADS ALL THE ID, NAME PAIRS SO WE CAN LIST ALL THE LISTS
@@ -340,11 +367,10 @@ export const useGlobalStore = () => {
         asyncAddSong();
     }
 
-    store.markSongForDeletion = function (playlistID, song, index){
+    store.markSongForDeletion = function ( song, index){
         storeReducer({
             type:GlobalStoreActionType.MARK_SONG_FOR_DELETION,
             payload: {
-                playlistID : playlistID, 
                 song : song,
                 index : index,
             }
@@ -383,18 +409,77 @@ export const useGlobalStore = () => {
         asyncDeleteSong();
     }
 
+    store.markSongForEdit = function (song) {
+        storeReducer({
+            type: GlobalStoreActionType.MARK_SONG_FOR_EDIT,
+            payload: {
+                SongToEdit : song,
+            }
+        })
+        store.showModal("edit-song-modal");
+    }
 
+    store.editSong = function (newSong){
+        let song = store.SongToEdit;
+        song.title = newSong.title;
+        song.artist = newSong.artist;
+        song.youTubeId = newSong.youTubeId;
+        let playlist = this.currentList;
 
+        async function updateList() {
+            let response = await api.songChange(store.currentList._id, playlist.songs);
+            if (response.data.success) {
+                async function getListPairs() {
+                    response = await api.getPlaylistPairs();
+                    if (response.data.success) {
+                        let pairsArray = response.data.idNamePairs;
+                        storeReducer({
+                            type: GlobalStoreActionType.EDIT_SONG,
+                            payload: {
+                                idNamePairs: pairsArray,
+                                playlist: playlist
+                            }
+                        });
+                    }
+                }
+                getListPairs();
+            }
+        }
+        updateList();
+    }
 
-
-
-
-
-
+    store.moveSong = function (from, to){
+        let playlist = this.currentList;
+        let song1 = playlist.songs[from];
+        let song2 = playlist.songs[to];
+        playlist.songs[from] = song2;
+        playlist.songs[to] = song1;
+        console.log(playlist);
+        async function updateList() {
+            let response = await api.songChange(store.currentList._id, playlist.songs);
+            if (response.data.success) {
+                async function getListPairs() {
+                    response = await api.getPlaylistPairs();
+                    if (response.data.success) {
+                        let pairsArray = response.data.idNamePairs;
+                        storeReducer({
+                            type: GlobalStoreActionType.MOVE_SONG,
+                            payload: {
+                                idNamePairs: pairsArray,
+                                playlist: playlist
+                            }
+                        });
+                    }
+                }
+                getListPairs();
+            }
+        }
+        updateList();
+    }
 
     //transactions
     store.addAddSongTransaction = function(id, newSong){
-        tps.addTransaction(new AddSong_Transaction(store, id, newSong));
+        tps.addTransaction(new AddSong_Transaction(store));
     }
 
     store.addDeleteSongTransaction = function(){
@@ -409,6 +494,10 @@ export const useGlobalStore = () => {
         tps.addTransaction(new MoveSong_Transaction(store, from, to, id));
     }
 
+    store.clearTransaction = function () {
+        tps.clearAllTransactions();
+    }
+
     //control modal to display/undisplay
     store.hideModal = function (id){
         let modal = document.getElementById(id);
@@ -417,6 +506,7 @@ export const useGlobalStore = () => {
     store.showModal = function (id){
         let modal = document.getElementById(id);
         modal.classList.add("is-visible");
+        
     }
 
     // THIS GIVES OUR STORE AND ITS REDUCER TO ANY COMPONENT THAT NEEDS IT

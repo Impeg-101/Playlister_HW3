@@ -7,7 +7,7 @@ function DeleteSongModal(props){
     let name = (store.SongToDelete === undefined || store.SongToDelete === null) ? "" : store.SongToDelete.name;
 
     function handleConfirmDelete(){
-        store.deleteSong(store.SongToDelete.playlistID, store.SongToDelete.index);
+        store.addDeleteSongTransaction();
         store.hideModal("delete-song-modal");
     }
 
