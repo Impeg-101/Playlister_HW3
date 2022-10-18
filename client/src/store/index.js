@@ -347,13 +347,15 @@ export const useGlobalStore = () => {
         async function asyncCreateNewList() {
             let response = await api.createPlaylist({name : "Untitled", song : []});
             if(response.data.success){
-                let playist = response.data.playlist;
+                let playlist = response.data.playlist;
+                let id = playlist._id;
                 let pairs = store.idNamePairs;
-                pairs.push(playist);
+                pairs.push(playlist);
                 storeReducer({
                     type : GlobalStoreActionType.CREATE_NEW_LIST,
-                    payload : {idNamePairs : pairs, playist : playist},
+                    payload : {idNamePairs : pairs, playist : playlist},
                 })
+                store.setCurrentList(id);
             }
         }
         asyncCreateNewList();

@@ -55,7 +55,6 @@ function ListCard(props) {
     }
     function handleUpdateText(event) {
         setText(event.target.value );
-        console.log(text);
     }
 
     let selectClass = "unselected-list-card";
