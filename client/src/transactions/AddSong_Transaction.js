@@ -21,7 +21,7 @@ import jsTPS_Transaction from "../common/jsTPS.js"
 
     doTransaction() {
         this.index = this.store.currentList.songs.length + 1;
-        this.store.createNewSong(this.id, this.newsong, this.index);
+        this.store.addSong(this.id, this.newsong, this.index);
         this.index = this.store.currentList.songs.length;
     }
     

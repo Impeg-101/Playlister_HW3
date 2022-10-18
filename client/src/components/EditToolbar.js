@@ -26,14 +26,18 @@ function EditToolbar() {
 
     function handleAddSong(event){
         event.stopPropagation();
-        store.addEditSongTransaction();
+        store.addAddSongTransaction();
     }
 
     let editStatus = false;
-    if (store.isListNameEditActive ||
-        store.currentList === null) {
+
+    if (
+        // store.isListNameEditActive ||
+        !store.ToolBarButton || store.currentList === null
+        ) {
         editStatus = true;
     }
+
 
     return (
         <span id="edit-toolbar">
@@ -48,18 +52,20 @@ function EditToolbar() {
             <input
                 type="button"
                 id='undo-button'
-                disabled={editStatus}
+                disabled={!store.hasUndo}
                 value="⟲"
                 className={enabledButtonClass}
                 onClick={handleUndo}
+                onKeyDown = {store.handleKeyDown}
             />
             <input
                 type="button"
                 id='redo-button'
-                disabled={editStatus}
+                disabled={!store.hasRedo}
                 value="⟳"
                 className={enabledButtonClass}
                 onClick={handleRedo}
+                onKeyDown = {store.handleKeyDown}
             />
             <input
                 type="button"

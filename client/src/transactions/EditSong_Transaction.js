@@ -19,9 +19,9 @@ export default class EditSong_Transaction extends jsTPS_Transaction {
             artist: this.store.SongToEdit.artist, 
             youTubeId: this.store.SongToEdit.youTubeId};
         this.newsong = {
-            title: document.getElementById("title-input").value, 
-            artist: document.getElementById("artist-input").value, 
-            youTubeId: document.getElementById("youtubeID-input").value};
+            title: document.getElementById("titleinput").value, 
+            artist: document.getElementById("artistinput").value, 
+            youTubeId: document.getElementById("youtubeidinput").value};
     }
 
     doTransaction() {
@@ -29,7 +29,7 @@ export default class EditSong_Transaction extends jsTPS_Transaction {
             title : this.newsong.title, 
             artist: this.newsong.artist, 
             youTubeId: this.newsong.youTubeId});
-        this.store.showModal("edit-song-modal");
+        // this.store.showModal("edit-song-modal");
     }
     
     undoTransaction() {

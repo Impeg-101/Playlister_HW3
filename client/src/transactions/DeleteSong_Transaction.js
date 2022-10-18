@@ -13,19 +13,20 @@ import jsTPS_Transaction from "../common/jsTPS.js"
         super();
         this.store = store;
         this.id = this.store.currentList._id;
-        this.index = this.store.song_toDelete_index;
+        this.index = this.store.SongIndex;
         this.savedsong = {
-            title : this.store.SongToDelete.title, 
-            artist: this.store.SongToDelete.artist, 
-            youTubeId: this.store.SongToDelete.youTubeId};
+            title :this.store.SongToDelete.title,
+            artist : this.store.SongToDelete.artist,
+            youTubeId: this.store.SongToDelete.youTubeId
+        };
     }
 
     doTransaction() {
         this.store.deleteSong(this.id, this.index);
-        this.store.showModal("delete-song-modal")
+        // this.store.showModal("delete-song-modal")
     }
     
     undoTransaction() {
-        this.store.createNewSong(this.id, this.savedsong, this.index);
+        this.store.addSong(this.id, this.savedsong, this.index);
     }
 }

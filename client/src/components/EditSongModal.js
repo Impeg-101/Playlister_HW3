@@ -5,8 +5,6 @@ function EditSongModal(){
     const {store} = useContext(GlobalStoreContext);
 
     function handleConfirmEdit(){
-
-
         store.addEditSongTransaction();
         store.hideModal("edit-song-modal");
     }

@@ -11,7 +11,7 @@ function SongCard(props) {
 
     function handleRemoveSong(event){
         event.stopPropagation();
-        store.markSongForDeletion(store.currentList._id ,song,index);
+        store.markSongForDeletion(song, index);
     }
 
     function handleEditSong(event){
